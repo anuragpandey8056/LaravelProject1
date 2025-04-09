@@ -100,6 +100,7 @@ p {
         <h2 class="section-heading">Our Services</h2>
       </div>
       <div class="row">
+        
         <div class="column">
           <div class="card">
             <div class="icon-wrapper">
