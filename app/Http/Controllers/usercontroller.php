@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\product;
 use App\Models\StudentModel;
 use Illuminate\Http\Request;
 
@@ -49,7 +50,7 @@ class usercontroller extends Controller
      }
 
 
-     public function getshowdata(){
+   public function getshowdata(){
       $student=StudentModel::get();
       return view('showdata',["data"=>$student]);
    }
@@ -87,6 +88,48 @@ class usercontroller extends Controller
      
    }
 
+   //add product model
+   public function addproduct(Request $request){
+      $request->validate([
+         'name'=>"required|max:255|string",
+         'price'=>"required|max:255|string",
+        
+
+      ]);
+      product::create([
+         'name'=>$request->name,
+         'price'=>$request->price,
+        
+         
+
+      ]);
+       return redirect()->back()->with('status','Inserted');
+     }
+
+
+
+
+
+     public function showdata2(){
+      
+      $products=product::get();
+      // dd($products);
+
+      return view('contact2',["data"=>$products]);
+   }
+
+   public function editeajax(int $id){
+      
+      $product=product::findOrFail($id);
+      return view('addproduct_modal',["data"=>$product]);
+   }
+
+   public function deleteajax(int $id){
+      
+      $del=product::findOrFail($id);
+      $del->delete();    
+      return response()->json(['status'=>true]); 
+    }
 
      
       
