@@ -90,45 +90,35 @@ class usercontroller extends Controller
 
    //add product model
    public function addproduct(Request $request){
-      $request->validate([
-         'name'=>"required|max:255|string",
-         'price'=>"required|max:255|string",
-        
-
-      ]);
-      product::create([
-         'name'=>$request->name,
-         'price'=>$request->price,
-        
-         
-
-      ]);
-       return redirect()->back()->with('status','Inserted');
-     }
-
-
-
-
-
-     public function showdata2(){
-      
-      $products=product::get();
-      // dd($products);
-
-      return view('contact2',["data"=>$products]);
+      $product=new product;
+      parse_str($request->input('data'),$formdata);
+      $product->name=$formdata['name'];
+      $product->price=$formdata['price'];
+      if(empty($formdata['id'])||($formdata['id']==""))
+      $product->save();
+      else{
+         $product=product::find($formdata['id']);
+         $product->name=$formdata['name'];
+         $product->price=$formdata['price'];
+         $product->update();
+      }
+      echo "changes made succesfully";
    }
 
-   public function editeajax(int $id){
-      
-      $product=product::findOrFail($id);
-      return view('addproduct_modal',["data"=>$product]);
+
+   public function fetchdata(){
+      return product::orderBy('id','desc')->get();
+   }
+   
+
+   public function editdata(Request $req){
+      return product::find($req->id);   
    }
 
-   public function deleteajax(int $id){
+   public function deletedata(Request $req){
+      product::where('id',$req->id)->delete(); 
+      echo "data delted succesfully";
       
-      $del=product::findOrFail($id);
-      $del->delete();    
-      return response()->json(['status'=>true]); 
     }
 
      
