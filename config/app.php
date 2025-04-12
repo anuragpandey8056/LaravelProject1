@@ -31,6 +31,13 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+            'providers' => [
+                Intervention\Image\ImageServiceProvider::class,
+            ],
+            'aliases' => [
+                'Image' => Intervention\Image\Facades\Image::class,
+            ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode

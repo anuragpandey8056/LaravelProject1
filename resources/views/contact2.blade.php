@@ -9,6 +9,8 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   
 
   
@@ -39,23 +41,7 @@
             <tbody id= 'empdata'>
 
               <tr>
-               <td></td>
-               <td></td>
-               <td></td>
-              
-                <td>
-                   <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal">
- 
-                   <a  href="">Update</a>
-                   </button>
-                </td>
-
-                <td><button type="button" class="btn btn-danger ">
-                  <a href="" >
-                  Delete
-                  </a>
-                  
-                </button></td>
+             
               </tr>
              
             </tbody>
@@ -74,7 +60,7 @@
 <!-- Modal -->
  <p id="respanel"> click on button open model</p>
 <div class="modal fade" id="mymodel" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-<form  action="" method="POST" id="submitform">
+<form  action="" method="POST" id="submitform" enctype="multipart/form-data">
 @csrf
   <div class="modal-dialog">
     <div class="modal-content">
@@ -87,7 +73,7 @@
       </div> 
       <div class="mb-3">
 
-      
+
       <input type="hidden" name="id" id="id" >
         
         <label for="exampleInputEmail1" class="form-label">Name</label>
@@ -97,6 +83,14 @@
       <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Price</label>
         <input type="text" name="price" class="form-control" id="price">
+      </div>
+
+
+      <div class="mb-3 image-box">
+
+        <label for="exampleInputPassword1" class="form-label">Image</label>
+        <!-- <span onclick="add_more()">+</span> -->
+        <input type="file" name="image" class="form-control" id="image">
       </div>
 
 
@@ -119,6 +113,11 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
+
+  function add_more(){
+    $html='<div class="mb-3"><input type="file" name="image" class="form-control" id="image"><span><button type="button" class="btn btn-info">-</button></span>  </div>';
+    $('.image-box').after($html);
+  }
   //update
   $(document).ready(function () {
     $('#newmodal').on('click',function(){
@@ -130,39 +129,37 @@
     //save data
     $('#submitform').on('submit', function (e) {
     e.preventDefault();
-    var data = $(this).serialize();
+            let form_data = new FormData(this);
+            $.ajax({
+                url:"{{ route('addproduct') }}",
+                method:'post',
+                data:form_data,
+                cache:false,
+                contentType: false,
+                processData: false,
+                success:function(response){
+                  $('#respanel').html(response);
+                  $('#submitform')[0].reset();
+                  $('#mymodel').modal('hide');
 
-    $.ajax({
-        url: 'addproduct',
-        type: 'POST',
-        data: {
-            "_token": "{{ csrf_token() }}",
-            data: data
-        },
-        success: function(response) {
-            $('#respanel').html(response);
-            $('#submitform')[0].reset();
-            $('#mymodel').modal('hide');
-
-           
-            $('.modal-backdrop').remove();
-            $('body').removeClass('modal-open');
-            $('body').css('padding-right', '');
-
-            
-            Swal.fire({
-                title: 'Success!',
-                text: 'Product has been added successfully.',
-                icon: 'success',
-                timer: 2000,
-                showConfirmButton: false
-            });
-
-            fetchrecords();
-        },
-        error: function(xhr) {
+                
+                  $('.modal-backdrop').remove();
+                  $('body').removeClass('modal-open');
+                  $('body').css('padding-right', '');
+ 
+                    Swal.fire({
+                      title: 'Success!',
+                      text: 'Product has been added successfully.',
+                      icon: 'success',
+                      timer: 2000,
+                      showConfirmButton: false
+                });
+            },
+            error: function(xhr) {
             Swal.fire('Error!', 'Failed to save data.', 'error');
         }
+
+
     });
 });
 

@@ -5,6 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\product;
 use App\Models\StudentModel;
 use Illuminate\Http\Request;
+use Intervention\Image\ImageManager;
+use Intervension\Image\Facades\Image;
+use Intervension\Image\Facades\File;
+
+use Illuminate\support\facades\storage;
+use Intervention\Image\Drivers\Gd\Driver;
+
 
 
 
@@ -90,20 +97,37 @@ class usercontroller extends Controller
 
    //add product model
    public function addproduct(Request $request){
-      $product=new product;
-      parse_str($request->input('data'),$formdata);
-      $product->name=$formdata['name'];
-      $product->price=$formdata['price'];
-      if(empty($formdata['id'])||($formdata['id']==""))
-      $product->save();
+      $image = $request->file('image');
+        $imageName = time().'-'.uniqid().'.'.$image->getClientOriginalExtension();
+        $image->move('img',$imageName);
+     
+
+
+
+        $tbl = new product;
+        $tbl->name=$request->name;
+        $tbl->price=$request->price;
+        $tbl->image=$imageName;
+
+
+        if(empty($formData['id'])||($formData['id']=="")){
+            $tbl->save();
+            return response()->json(['status' => 'success', 'message' => 'Product Added']);
+        }
       else{
-         $product=product::find($formdata['id']);
-         $product->name=$formdata['name'];
-         $product->price=$formdata['price'];
-         $product->update();
-      }
-      echo "changes made succesfully";
+        $tbl=product::find($formData['id']);
+        if (!$tbl) {
+            return response()->json(['status' => 'error', 'message' => 'Product not found'], 404);
+        }
+        $tbl->name=$request->name;
+        $tbl->price=$request->price;
+        $tbl->image=$imageName;
+        
+        $tbl->update();
+        return response()->json(['status' => 'success', 'message' => 'Product Updated']);
    }
+
+  }
 
 
    public function fetchdata(){
@@ -116,7 +140,23 @@ class usercontroller extends Controller
    }
 
    public function deletedata(Request $req){
-      product::where('id',$req->id)->delete(); 
+      $product=product::find($req->id);
+      // product::where('id',$req->id)->delete();
+      if($product){
+         $imagepath=public_path('img',$product->image);
+         if(file::exits($imagepath)){
+            file::delete($imagepath);
+         }
+         $product->delete();
+
+         return response()->json("data deleted sucessfully");
+
+
+      }else{
+         return response()->json("item not deleted ");
+
+      }
+
       echo "data delted succesfully";
       
     }

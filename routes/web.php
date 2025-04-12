@@ -30,7 +30,7 @@ Route::get('{id}/edit',[usercontroller::class,'getedit']);
 Route::post('{id}/update',[usercontroller::class,'getupdate']);
 
 //ajax crud
-Route::post('/addproduct',[usercontroller::class,'addproduct']);
+Route::post('/addproduct',[usercontroller::class,'addproduct'])->name('addproduct');
 
 Route::get('/fetchdata',[usercontroller::class,'fetchdata']);
 Route::post('editdata',[usercontroller::class,'editdata']);
