@@ -31,12 +31,16 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
-            'providers' => [
-                Intervention\Image\ImageServiceProvider::class,
-            ],
-            'aliases' => [
-                'Image' => Intervention\Image\Facades\Image::class,
-            ],
+
+//     'providers' => [
+  
+//     Intervention\Image\ImageServiceProvider::class,
+// ],
+
+// 'aliases' => [
+   
+//     'Image' => Intervention\Image\Facades\Image::class,
+// ],
 
     /*
     |--------------------------------------------------------------------------
@@ -175,6 +179,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        // Intervention\Image\ImageServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -190,6 +195,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+        // 'Image' => Intervention\Image\Facades\Image::class,
     ])->toArray(),
 
 ];

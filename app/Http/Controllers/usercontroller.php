@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\product;
 use App\Models\StudentModel;
 use Illuminate\Http\Request;
-use Intervention\Image\ImageManager;
-use Intervension\Image\Facades\Image;
-use Intervension\Image\Facades\File;
 
+
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
+use Intervention\Image\ImageManager;
+
+use Intervension\Image\Facades\Image;
 use Illuminate\support\facades\storage;
+use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Drivers\Gd\Driver;
 
 
@@ -31,9 +35,9 @@ class usercontroller extends Controller
      public function getuserabout(){
         return view('about');
      }
-     public function getusercontact2(){
-        return view('contact2');
-     }
+   //   public function getusercontact2(){
+   //      return view('contact2');
+   //   }
 
      public function getadduser(Request $request){
       $request->validate([
@@ -95,73 +99,168 @@ class usercontroller extends Controller
      
    }
 
-   //add product model
-   public function addproduct(Request $request){
-      $image = $request->file('image');
-        $imageName = time().'-'.uniqid().'.'.$image->getClientOriginalExtension();
-        $image->move('img',$imageName);
-     
 
 
 
-        $tbl = new product;
-        $tbl->name=$request->name;
-        $tbl->price=$request->price;
-        $tbl->image=$imageName;
+
+//AJAX
 
 
-        if(empty($formData['id'])||($formData['id']=="")){
-            $tbl->save();
-            return response()->json(['status' => 'success', 'message' => 'Product Added']);
-        }
-      else{
-        $tbl=product::find($formData['id']);
-        if (!$tbl) {
-            return response()->json(['status' => 'error', 'message' => 'Product not found'], 404);
-        }
-        $tbl->name=$request->name;
-        $tbl->price=$request->price;
-        $tbl->image=$imageName;
-        
-        $tbl->update();
-        return response()->json(['status' => 'success', 'message' => 'Product Updated']);
+   public function getusercontact2(Request $request)
+   {
+       $products = product::latest()->get();
+   
+       return view('contact2', compact('products'));
    }
 
-  }
+
+   //add product model
+   public function store(Request $request)
+   {
+
+       $request->validate([
+           'name' => 'required|min:1|max:10',
+           'price' => 'required',
+           'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+        
+        // Log::error("Product not found with ");
+        if ($request->hasFile('image')) {
+           $manager = new ImageManager(new Driver());
+   
+           $name_gen = uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
+   
+           $img = $manager->read($request->file('image'));
+           $img->resize(800, 400);
+           $img->save(public_path('Upload/products/' . $name_gen));
+   
+           $save_url = 'Upload/products/' . $name_gen;
+   
+           $product = product::create([
+               'name' => $request->name,
+               'price' => $request->price,
+               'image' => $save_url,
+           ]);
+   
+           return response()->json([
+               'success' => 'Product saved successfully.',
+               'product' => [
+                   'id' => $product->id,
+                   'name' => $product->name,
+                   'price' => $product->price,
+                   'image' => asset($product->image),
+               ]
+           ]);
+       }
+   
+       return response()->json(['error' => 'Image upload failed.'], 422);
+   }
 
 
-   public function fetchdata(){
-      return product::orderBy('id','desc')->get();
+
+
+
+
+   // Edit a product by its ID
+   public function edit($id)
+   {
+       $product = product::findOrFail($id);
+       
+       return response()->json([
+           'product' => $product
+       ]);
+   }
+   
+   // Update a product by its ID
+   public function update(Request $request, $id)
+   {
+       $request->validate([
+           'name' => 'required|min:1|max:10',
+           'price' => 'required',
+           'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+       ]);
+   
+       $product = product::findOrFail($id);
+    //   Log::error("Product not found with ",$product);
+  
+
+   
+       $product->name = $request->name;
+       $product->price = $request->price;
+   
+       if ($request->hasFile('image')) {
+           $manager = new ImageManager(new Driver());
+   
+           if ($product->image && Storage::exists($product->image)) {
+               Storage::delete($product->image);
+           }
+
+           if ($product->image) {
+               $imagePath = public_path($product->image);
+       
+               if (File::exists($imagePath)) {  
+                   File::delete($imagePath);
+               } else {
+                   
+               }
+           } 
+   
+           $name_gen = uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
+           $img = $manager->read($request->file('image'));
+           $img->resize(800, 400);
+           $img->save(public_path('Upload/products/' . $name_gen));
+   
+           $save_url = 'Upload/products/' . $name_gen;
+           $product->image = $save_url;
+       }
+   
+       $product->save();
+   
+       return response()->json([
+           'success' => 'Product updated successfully.',
+           'product' => [
+               'id' => $product->id,
+               'name' => $product->name,
+               'price' => $product->price,
+               'image' => asset($product->image),
+           ]
+       ]);
    }
    
 
-   public function editdata(Request $req){
-      return product::find($req->id);   
+
+   // Delete a product by its ID
+   public function delete($id)
+   {
+       $product = product::find($id);
+   
+       if (!$product) {
+           
+           return response()->json(['error' => 'Product not found'], 404);
+       }
+   
+       // Log::info("Found product: " . $product->name);
+   
+       if ($product->image) {
+           $imagePath = public_path($product->image);
+   
+           if (File::exists($imagePath)) {
+               File::delete($imagePath);
+               // Log::info("Image deleted at: $imagePath");
+           } else {
+               // Log::warning("Image not found at: $imagePath");
+           }
+       } else {
+           // Log::warning("No image field for product: $id");
+       }
+   
+       $product->delete();
+       // Log::info("Product deleted: $id");
+   
+       return response()->json(['success' => 'Product deleted successfully']);
    }
-
-   public function deletedata(Request $req){
-      $product=product::find($req->id);
-      // product::where('id',$req->id)->delete();
-      if($product){
-         $imagepath=public_path('img',$product->image);
-         if(file::exits($imagepath)){
-            file::delete($imagepath);
-         }
-         $product->delete();
-
-         return response()->json("data deleted sucessfully");
-
-
-      }else{
-         return response()->json("item not deleted ");
-
-      }
-
-      echo "data delted succesfully";
-      
-    }
-
-     
+ 
+  
       
   
 }
