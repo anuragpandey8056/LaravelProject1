@@ -42,10 +42,12 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th>id</th>
                     <th>Name</th>
                     <th>price</th>
+                    <th>category</th>
                     <th>Image</th>
+
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -55,6 +57,8 @@
                     <td>{{ $product->id }}</td>
                     <td>{{ $product->name }}</td>
                     <td>{{ $product->price }}</td>
+                    <td>{{ $product->category->categoryname}}</td>
+
                     <td>
                         @if($product->image)
                         <img src="{{ asset($product->image) }}" style="width: 120px; height: 60px; cursor:pointer;"
@@ -105,6 +109,19 @@
                         <span class="text-danger error-text description_error"></span>
                     </div>
                     <div class="form-group mb-3">
+                    <label >Choose a category</label>
+
+                        <select name="category" class="form-control" required>
+                        <option value="">------select a category ---</option>
+
+                        <option value="1">Fashion</option>
+                        <option value="2">Electronics</option>
+                        <option value="3">beauty</option>
+                        <option value="4">grocery</option>
+                        <option value="5">stationary</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
                         <label>Image:</label>
                         <input type="file" name="image" class="form-control" accept="image/*" required />
                         <span class="text-danger error-text image_error"></span>
@@ -137,6 +154,22 @@
                         <label>price:</label>
                         <input type="text" name="price" id="editProductPrice" class="form-control" required />
                         <span class="text-danger error-text description_error"></span>
+                    </div>
+
+
+                    <div class="form-group mb-3">
+                    <label >Choose a category</label>
+
+                        <select id="editcategory" name="category" class="form-control" required>
+                        <option value="">------select a category ---</option>
+
+                        <option value="1">Fashion</option>
+                        <option value="2">Electronics</option>
+                        <option value="3">beauty</option>
+                        <option value="4">grocery</option>
+                        <option value="5">stationary</option>
+
+                        </select>
                     </div>
                     <div class="form-group mb-3">
                         <label>Image:</label>
@@ -217,6 +250,8 @@
                         <td>${response.product.id}</td>
                         <td>${response.product.name}</td>
                         <td>${response.product.price}</td>
+                        <td>${response.product.category}</td>
+
                         <td><img src="${response.product.image}" class="product-img" alt="Image"></td>
                         <td><button class="btn btn-warning btn-sm editProductBtn" data-id="${response.product.id}">Edit</button>
                         <button class="btn btn-danger btn-sm deleteProductBtn" data-id="${response.product.id}">Delete</button></td>
@@ -238,6 +273,9 @@
         });
     
         // Edit Product AJAX - Load Product Data into Modal
+
+
+
 $(document).on('click', '.editProductBtn', function () {
     let productId = $(this).data('id');
 
@@ -245,11 +283,15 @@ $(document).on('click', '.editProductBtn', function () {
     $.ajax({
         url: `/products/${productId}/edit`,
         success: function (response) {
-            console.log(response.product.id);
+            console.log(response.product.cateory_id);
+            // console.log(response.product.id);
             // Fill input fields
             $('#editProductId').val(response.product.id);
             $('#editProductName').val(response.product.name); 
             $('#editProductPrice').val(response.product.price); 
+            $('#editcategory').val(response.product.cateory_id); 
+            
+
 
            
             if (response.product.image) {
@@ -288,6 +330,8 @@ $(document).on('click', '.editProductBtn', function () {
                     $('#editProductModal').modal('hide');
                     $(`#product_${response.product.id} td:nth-child(2)`).text(response.product.name);
                     $(`#product_${response.product.id} td:nth-child(3)`).text(response.product.price);
+                    $(`#product_${response.product.id} td:nth-child(3)`).text(response.product.cateory_id);
+
                     $(`#product_${response.product.id} td:nth-child(4) img`).attr('src', response.product.image);
                 },
                 error: function(xhr) {
@@ -305,7 +349,7 @@ $(document).on('click', '.editProductBtn', function () {
     
 
 
-        
+
         // Delete Product AJAX with Event Delegation
         $(document).on('click', '.deleteProductBtn', function(e) {
             e.preventDefault();

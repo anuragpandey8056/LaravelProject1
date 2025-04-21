@@ -30,6 +30,7 @@ class productSeeder extends Seeder
             DB::table('products')->insert([
                 'name' => Str::random(6),
                 'price' => rand(100, 999),
+                'cateory_id'=>1,
                 'image' => 'img/' . $imageFilename 
             ]);
         }

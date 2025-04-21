@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\product;
+use App\Models\heros;
 // use App\Models\category;
+use App\Models\product;
+
+
 use App\Models\category;
-
-
 use App\Models\StudentModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\ImageManager;
 use Intervension\Image\Facades\Image;
@@ -24,7 +25,10 @@ use Intervention\Image\Drivers\Gd\Driver;
 class usercontroller extends Controller
 {
     public function getuser(){
-       return view('home');
+        $activeHeroes = heros::where('status', 1)->first();
+        $products = product::with('category')->get();
+        // dd($activeHeroes);
+       return view('home',compact('activeHeroes','products'));
     }
 
     public function getusercontact(){
@@ -120,6 +124,7 @@ class usercontroller extends Controller
 
 
    //add product model
+
    public function store(Request $request)
    {
 
@@ -129,6 +134,7 @@ class usercontroller extends Controller
            'category' => 'required',
            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+    //    Log::error("Product not found with ");
         
         if ($request->hasFile('image')) {
             $manager = new ImageManager(new Driver());
@@ -227,7 +233,6 @@ class usercontroller extends Controller
        }
    
        $product->save();
-    //    Log::error("Product not found with ");
        return response()->json([
            'success' => 'Product updated successfully.',
            'product' => [
@@ -272,6 +277,57 @@ class usercontroller extends Controller
    
        return response()->json(['success' => 'Product deleted successfully']);
    }
+
+
+   public function fashion()
+   {
+    $products = product::with('category')->get();
+    
+    
+    return view('fashion',compact('products'));
+   }
+
+   public function electronics()
+   {
+    $products = product::with('category')->get();
+
+    return view('electronics' ,compact('products'));
+   }
+   public function beauty()
+   {
+    $products = product::with('category')->get();
+
+    return view('beauty' ,compact('products'));
+   }
+   public function grocery()
+   {
+    $products = product::with('category')->get();
+
+    return view('grocery' ,compact('products'));
+   }
+   public function Stationary()
+   {
+    $products = product::with('category')->get();
+
+    return view('stationary' ,compact('products'));
+   }
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
   
       

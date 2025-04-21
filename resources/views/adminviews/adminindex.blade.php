@@ -9,7 +9,7 @@
                 <div class="card-body text-center">
                     <i class="fas fa-box fa-2x text-primary mb-3"></i>
                     <h5 class="card-title">Total Products</h5>
-                    <p class="card-text fs-4 fw-bold">120</p>
+                    <p class="card-text fs-4 fw-bold">{{ $productscount }}</p>
                 </div>
             </div>
         </div>
@@ -20,7 +20,7 @@
                 <div class="card-body text-center">
                     <i class="fas fa-users fa-2x text-success mb-3"></i>
                     <h5 class="card-title">Total Users</h5>
-                    <p class="card-text fs-4 fw-bold">85</p>
+                    <p class="card-text fs-4 fw-bold">{{$totalUser}}</p>
                 </div>
             </div>
         </div>
@@ -31,7 +31,7 @@
                 <div class="card-body text-center">
                     <i class="fas fa-chart-line fa-2x text-warning mb-3"></i>
                     <h5 class="card-title">Sales Today</h5>
-                    <p class="card-text fs-4 fw-bold">₹5,200</p>
+                    <p class="card-text fs-4 fw-bold">₹{{$totalsale}}</p>
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@
                 <div class="card-body text-center">
                     <i class="fas fa-layer-group fa-2x text-info mb-3"></i>
                     <h5 class="card-title">Categories</h5>
-                    <p class="card-text fs-4 fw-bold">10</p>
+                    <p class="card-text fs-4 fw-bold">{{$totalcategory}}</p>
                 </div>
             </div>
         </div>
