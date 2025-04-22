@@ -325,7 +325,25 @@
       <div class="social-icons" id="socialIcons">
         <a href="#"><i class="fab fa-instagram"></i></a>
         <a href="#"><i class="fab fa-twitter"></i></a>
-        <a href="#"><i class="fab fa-dribbble"></i></a>
+        <div style="
+              background-color: red;
+              color: white;
+              border-radius: 50%;
+              width: 15px;
+              height: 15px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 12px;
+              position: absolute;
+              top: 12px;
+              right: 22px;">
+    {{ count($cart) }}
+</div>
+       
+        <a href="{{ route('cart') }}"><i class="fas fa-shopping-cart"></i></a>
+
+
         <a href="#"><i class="fab fa-linkedin"></i></a>
       </div>
     </div>

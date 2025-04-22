@@ -8,6 +8,7 @@ use App\Http\Controllers\usercontroller;
 use App\Http\Controllers\admincontroller;
 use App\Http\Controllers\SingerController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\razorpaycontroller;
 
 
 /*
@@ -46,8 +47,38 @@ Route::get('electronics1',[usercontroller::class,'electronics']);
 Route::get('beauty1',[usercontroller::class,'beauty']);
 Route::get('grocery1',[usercontroller::class,'grocery']);
 Route::get('Stationary1',[usercontroller::class,'Stationary']);
+Route::get('/add-to-cart/{id}', [ShopController::class, 'addToCart'])->name('addcart');
+
+// Route for viewing cart
+Route::get('/cart', [ShopController::class, 'viewCart'])->name('cart');
+
+
+Route::post('/update-cart/{id}', [ShopController::class, 'updateCart'])->name('update.cart');
+Route::get('/remove-cart/{id}', [ShopController::class, 'removeCart'])->name('remove.cart');
+
+
+
+
+// Razorpay Payment Routes
+Route::post('/razorpay-payment', [razorpaycontroller::class, 'payment'])->name('razorpay.payment');
+
+Route::get('/order-success/{id}', [razorpaycontroller::class, 'orderSuccess'])->name('order.success');
+
+
+
+
+
+
+// You should also add a route for checkout
+Route::get('/checkout', [ShopController::class, 'checkout'])->name('checkout');
+
+// And possibly add a route for your shop page if it doesn't exist yet
+Route::get('/shop', [ShopController::class, 'index'])->name('shop');
+
+
 
 Route::get('/shop',[shopcontroller::class,'shop']);
+
 
 
 

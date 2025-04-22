@@ -27,8 +27,9 @@ class usercontroller extends Controller
     public function getuser(){
         $activeHeroes = heros::where('status', 1)->first();
         $products = product::with('category')->get();
+        $cart = session()->get('cart');
         // dd($activeHeroes);
-       return view('home',compact('activeHeroes','products'));
+       return view('home',compact('activeHeroes','products','cart'));
     }
 
     public function getusercontact(){

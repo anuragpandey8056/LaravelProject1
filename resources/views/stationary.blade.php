@@ -19,7 +19,8 @@ $x = "stationary";
               <p class="card-text">{{ $product->description ?? 'No description available.' }}</p>
             </div>
             <div class="card-footer bg-transparent border-0">
-              <a href="#" class="btn btn-black w-100">Add to Cart</a>
+            <a href="{{route('addcart',['id'=>$product->id])}}" class="btn btn-black w-100">Add to Cart</a>
+
             </div>
           </div>
         </div>
