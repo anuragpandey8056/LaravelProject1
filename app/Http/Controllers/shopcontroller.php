@@ -3,18 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Models\product;
+use App\Models\category;
 use Illuminate\Http\Request;
 
 class shopcontroller extends Controller
 {
     public function shop()
     {
+        $product = Product::latest()->get();
+        $category = Category::latest()->get();
+        $cart = session()->get('cart');
+
+        return view('shop', compact('product', 'category', 'cart'));
+    }
     
-    $product=product::latest()->get();
-    
-    
- 
-     return view('shop',compact('product'));
+    public function filterProducts(Request $request)
+    {
+        $categoryId = $request->category_id;
+        
+        if ($categoryId) {
+            $products = Product::where('category_id', $categoryId)->latest()->get();
+        } else {
+            $products = Product::latest()->get();
+        }
+        
+        $productsHtml = view('partials.product_cards', compact('products'))->render();
+        
+        return response()->json([
+            'success' => true,
+            'productsHtml' => $productsHtml
+        ]);
     }
 
     public function addToCart($id)

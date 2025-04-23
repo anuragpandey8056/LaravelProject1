@@ -34,8 +34,8 @@
         <a class="nav-link text-white sidebar-link" href="{{ url('/addhero') }}">
             <i class="fas fa-briefcase me-2"></i>Hero
         </a>
-        <a class="nav-link text-white sidebar-link" href="{{ url('/searchproducts') }}">
-            <i class="fas fa-magnifying-glass me-2"></i> Search Products
+        <a class="nav-link text-white sidebar-link" href="{{ url('/addblog') }}">
+            <i class="fas fa-magnifying-glass me-2"></i> Admin Blog
         </a>
         <a class="nav-link text-white sidebar-link" href="{{ url('/updateproducts') }}">
             <i class="fas fa-file-pen me-2"></i> Update Products

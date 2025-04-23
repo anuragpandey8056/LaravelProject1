@@ -300,8 +300,8 @@
       <li><a href="{{route('/')}}">Home</a></li>
       <li><a href="{{ route('contact')  }}">Contact</a></li>
       <li><a href="{{ url('shop')  }}">Shop</a></li>
-      <li><a href="{{ route('about')  }}">About</a></li>
       <li><a href="{{ route('contact2')}} ">contact</a></li>
+      <li><a href="{{ url('/about')  }}">About Us</a></li>
     </ul>
     
     <div class="right-section">
@@ -325,21 +325,32 @@
       <div class="social-icons" id="socialIcons">
         <a href="#"><i class="fab fa-instagram"></i></a>
         <a href="#"><i class="fab fa-twitter"></i></a>
-        <div style="
-              background-color: red;
-              color: white;
-              border-radius: 50%;
-              width: 15px;
-              height: 15px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-size: 12px;
-              position: absolute;
-              top: 12px;
-              right: 22px;">
-    {{ count($cart) }}
-</div>
+        @php
+    $cart = session('cart', []); // Get cart from session or use an empty array
+    $cartCount = count($cart);
+@endphp
+
+@if($cartCount > 0)
+    <div style="
+        background-color: red;
+        color: white;
+        border-radius: 50%;
+        width: 15px;
+        height: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        position: absolute;
+        top: 12px;
+        right: 22px;">
+        {{ $cartCount }}
+    </div>
+@endif
+
+
+
+
        
         <a href="{{ route('cart') }}"><i class="fas fa-shopping-cart"></i></a>
 

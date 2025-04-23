@@ -32,7 +32,7 @@ use App\Http\Controllers\razorpaycontroller;
 Route::get('/',[usercontroller::class,'getuser'])->name('/');
 Route::get('contact/',[usercontroller::class,'getusercontact'])->name('contact');
 Route::get('service/',[usercontroller::class,'getuserservice'])->name('service');
-Route::get('about/',[usercontroller::class,'getuserabout'])->name('about');
+Route::get('/about',[usercontroller::class,'getuserabout'])->name('about');
 Route::post('/adduser',[usercontroller::class,'getadduser'])->name('adduser');
 Route::get('showdata',[usercontroller::class,'getshowdata'])->name('showdata');
 Route::get('{id}/delete',[usercontroller::class,'getdelete']);
@@ -78,6 +78,7 @@ Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 
 
 Route::get('/shop',[shopcontroller::class,'shop']);
+Route::get('/filter-products', [shopcontroller::class, 'filterProducts'])->name('filter.products');
 
 
 
@@ -100,6 +101,16 @@ Route::middleware(['auth', 'verified', 'PreventBackHistory'])->group(function ()
     Route::get('/dashboard', [admincontroller::class, 'adminindex'])->name('dashboard');
     Route::get('/viewproduct', [admincontroller::class, 'adminviewproduct'])->name('viewproduct');
     Route::get('/addhero', [admincontroller::class, 'addadminhero']);
+
+
+    Route::get('/addblog', [AdminController::class, 'adminBlog'])->name('adminblog');
+    Route::post('/blogs', [AdminController::class, 'storeBlog'])->name('blogs.store');
+    Route::put('/blogs/{blog}', [AdminController::class, 'updateBlog'])->name('blogs.update');
+    Route::delete('/blogs/{id}', [AdminController::class, 'destroyBlog'])->name('blogs.destroy');
+    Route::get('/destory/{id}/delete', [AdminController::class, 'destroyBlog']);
+    
+
+
 
 
 });

@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\heros;
+use App\Models\Blog;
 // use App\Models\category;
+use App\Models\heros;
+
+
 use App\Models\product;
-
-
 use App\Models\category;
 use App\Models\StudentModel;
-use Illuminate\Http\Request;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\ImageManager;
@@ -40,7 +41,8 @@ class usercontroller extends Controller
         return view('service');
      }
      public function getuserabout(){
-        return view('about');
+        $aboutdetail = Blog::latest()->first();
+        return view('about',compact('aboutdetail'));
      }
    //   public function getusercontact2(){
    //      return view('contact2');
