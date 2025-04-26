@@ -2,15 +2,15 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <style>
     .sidebar-link {
-    padding: 10px 15px;
+    padding: 10px 10px;
     border-radius: 8px;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .sidebar-link:hover {
     background-color: #343a40;
-    transform: translateX(5px);
-    color: #0dcaf0 !important;
+    transform: translateX(0.5px);
+    color:rgb(241, 162, 50) !important;
 }
 </style>
            
@@ -22,9 +22,11 @@
 
 
 <!-- Sidebar for large screens -->
-<aside class="bg-dark text-white d-none d-lg-block sidebar">
+<aside id="sidebar" class="bg-dark text-white d-none d-lg-block sidebar">
     <nav class="nav flex-column gap-4">
+       
 
+   
         <a class="nav-link text-white sidebar-link" href="">
             <i class="fas fa-house me-2"></i> Dashboard
         </a>
@@ -40,6 +42,20 @@
         <a class="nav-link text-white sidebar-link" href="{{ url('/updateproducts') }}">
             <i class="fas fa-file-pen me-2"></i> Update Products
         </a>
+        
+        @auth
+    @if(Auth::user()->hasRole('super-admin'))
+        <a class="nav-link text-white sidebar-link" href="{{ url('/roles') }}">
+            <i class="fas fa-briefcase me-2"></i> Roles
+        </a>
+        <a class="nav-link text-white sidebar-link" href="{{ url('/permission') }}">
+            <i class="fas fa-magnifying-glass me-2"></i> Permission
+        </a>
+        <a class="nav-link text-white sidebar-link" href="{{ url('/users') }}">
+            <i class="fas fa-file-pen me-2"></i> User
+        </a>
+    @endif
+     @endauth
 
         <!-- Log Out as full clickable nav-link -->
         <form method="POST" action="{{ route('logout') }}">
@@ -72,6 +88,15 @@
         </nav>
     </div>
 </div>
+
+
+<script>
+document.getElementById('sidebarToggle').addEventListener('click', function () {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('d-none');
+});
+</script>
+
 
 
 

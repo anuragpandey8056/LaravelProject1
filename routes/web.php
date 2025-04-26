@@ -1,14 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\shopcontroller;
+use App\Http\Controllers\Rolecontroller;
 
+use App\Http\Controllers\shopcontroller;
 use App\Http\Controllers\SongController;
 use App\Http\Controllers\usercontroller;
 use App\Http\Controllers\admincontroller;
 use App\Http\Controllers\SingerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\razorpaycontroller;
+use App\Http\Controllers\userasignController;
+use App\Http\Controllers\permissioncontroller;
 
 
 /*
@@ -21,6 +24,32 @@ use App\Http\Controllers\razorpaycontroller;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+
+// Route::resource('permission',[permissioncontroller::class,'index']);
+//Permissions
+
+Route::group(['middleware'=>'role:super-admin'],function(){
+Route::resource('permission',permissioncontroller::class);
+Route::get('permission/{permissionId}/delete',[permissioncontroller::class,'delete']);
+
+// roles
+Route::resource('roles',Rolecontroller::class);
+Route::get('roles/{roleId}/delete',[Rolecontroller::class,'delete']);
+Route::get('roles/{roleId}/give-permissions',[Rolecontroller::class,'addPermissionToRole']);
+Route::put('roles/{roleId}/give-permissions',[Rolecontroller::class,'givePermissionToRole']);
+
+
+
+Route::resource('users',userasignController::class);
+Route::get('users/{userId}/delete',[userasignController::class,'delete']);
+
+});
+
+
+
+
+
 
     // Route::get('/', function () {
     //     return view('welcome');
