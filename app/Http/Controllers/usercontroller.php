@@ -44,6 +44,10 @@ class usercontroller extends Controller
         $aboutdetail = Blog::latest()->first();
         return view('about',compact('aboutdetail'));
      }
+
+
+
+  
    //   public function getusercontact2(){
    //      return view('contact2');
    //   }

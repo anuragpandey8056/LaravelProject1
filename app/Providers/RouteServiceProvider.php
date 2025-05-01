@@ -17,7 +17,10 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
+    // public const HOME = '/tanent';
     public const HOME = '/';
+
+    public const HOME2 = '/user';
 
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
@@ -36,5 +39,9 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         });
+    }
+    protected function centralDomains():array
+    {
+        return config('tenancy.central_domains');
     }
 }

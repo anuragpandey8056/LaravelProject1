@@ -302,17 +302,22 @@
     </button>
     
     <ul class="nav-links" id="navLinks">
+  
       <li><a href="{{route('/')}}">Home</a></li>
       <li><a href="{{ route('contact')  }}">Contact</a></li>
       <li><a href="{{ url('shop')  }}">Shop</a></li>
       <li><a href="{{ route('contact2')}} ">contact</a></li>
       <li><a href="{{ url('/about')  }}">About Us</a></li>
-      @auth
+     
+  
+        @auth
         @if((auth()->user()->hasRole('super-admin'))||(auth()->user()->hasRole('Admin')))  
   
                     <x-nav-link   class="nav-link" :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                 
                 
                 @endif
         @endauth

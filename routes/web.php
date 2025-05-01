@@ -8,6 +8,7 @@ use App\Http\Controllers\SongController;
 use App\Http\Controllers\usercontroller;
 use App\Http\Controllers\admincontroller;
 use App\Http\Controllers\SingerController;
+use App\Http\Controllers\TenantController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\razorpaycontroller;
 use App\Http\Controllers\userasignController;
@@ -22,7 +23,6 @@ use App\Http\Controllers\permissioncontroller;
 | Here is where you can register web routes for your application. These
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "web" middleware group. Make something great!
-|
 */
 
 
@@ -64,6 +64,8 @@ Route::get('service/',[usercontroller::class,'getuserservice'])->name('service')
 Route::get('/about',[usercontroller::class,'getuserabout'])->name('about');
 Route::post('/adduser',[usercontroller::class,'getadduser'])->name('adduser');
 Route::get('showdata',[usercontroller::class,'getshowdata'])->name('showdata');
+Route::get('/plans',[usercontroller::class,'getshowplan'])->name('plans');
+
 Route::get('{id}/delete',[usercontroller::class,'getdelete']);
 Route::get('{id}/edit',[usercontroller::class,'getedit']);
 Route::post('{id}/update',[usercontroller::class,'getupdate']);
@@ -169,6 +171,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
+
+Route::resource('tanent',TenantController::class)->middleware(['auth', 'verified']);
+Route::post('tanent/store',[TenantController::class,'store'])->middleware(['auth', 'verified'])->name('tenant.store');
 
 require __DIR__.'/auth.php';
 

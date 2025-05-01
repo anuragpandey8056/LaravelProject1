@@ -54,6 +54,9 @@
         <a class="nav-link text-white sidebar-link" href="{{ url('/users') }}">
             <i class="fas fa-file-pen me-2"></i> User
         </a>
+        <a class="nav-link text-white sidebar-link" href="{{url('tanent/create')}}">
+            <i class="fas fa-file-pen me-2"></i> Tanent
+        </a>
     @endif
      @endauth
 
