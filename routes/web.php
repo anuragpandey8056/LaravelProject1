@@ -13,6 +13,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\razorpaycontroller;
 use App\Http\Controllers\userasignController;
 use App\Http\Controllers\permissioncontroller;
+use App\Http\Controllers\SubscriptionController;
+
+
 
 
 /*
@@ -47,18 +50,12 @@ Route::get('users/{userId}/delete',[userasignController::class,'delete']);
 });
 
 
+Route::get('/subscription',[SubscriptionController::class,'getsubscription']);
 
 
+Route::get('/',[SubscriptionController::class,'getsubscription'])->name('/getsubscription');
 
-
-    // Route::get('/', function () {
-    //     return view('welcome');
-    // });
-// Route::get('/',[usercontroller::class,'getusercontact'])->name('contact');
-
-
-
-Route::get('/',[usercontroller::class,'getuser'])->name('/');
+Route::get('/index',[usercontroller::class,'getuser'])->name('/index');
 Route::get('contact/',[usercontroller::class,'getusercontact'])->name('contact');
 Route::get('service/',[usercontroller::class,'getuserservice'])->name('service');
 Route::get('/about',[usercontroller::class,'getuserabout'])->name('about');
@@ -95,6 +92,13 @@ Route::post('/razorpay-payment', [razorpaycontroller::class, 'payment'])->name('
 
 Route::get('/order-success/{id}', [razorpaycontroller::class, 'orderSuccess'])->name('order.success');
 
+
+
+
+
+//subscription payemtn
+Route::post('/razorpay/create-order', [razorpaycontroller::class, 'createOrder'])->name('razorpay.create.order');
+Route::get('/tenant/success', [TenantController::class, 'success'])->name('tenant.success');
 
 
 
@@ -175,7 +179,7 @@ Route::middleware('auth')->group(function () {
 
 
 Route::resource('tanent',TenantController::class)->middleware(['auth', 'verified']);
-Route::post('tanent/store',[TenantController::class,'store'])->middleware(['auth', 'verified'])->name('tenant.store');
+Route::post('tanent/store',[TenantController::class,'store'])->name('tenant.store');
 
 require __DIR__.'/auth.php';
 

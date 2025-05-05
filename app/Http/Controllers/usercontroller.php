@@ -25,6 +25,8 @@ use Intervention\Image\Drivers\Gd\Driver;
 
 class usercontroller extends Controller
 {
+
+   
     public function getuser(){
         $activeHeroes = heros::where('status', 1)->first();
         $products = product::with('category')->get();

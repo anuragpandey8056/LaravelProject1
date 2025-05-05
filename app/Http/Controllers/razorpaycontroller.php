@@ -62,4 +62,28 @@ class RazorpayController extends Controller
         $order = Order::with('items')->findOrFail($orderId);
         return view('order-success', compact('order'));
     }
+
+
+
+    public function createOrder(Request $request)
+    {
+        $api = new Api(config('services.razorpay.key'), config('services.razorpay.secret'));
+        
+        $orderData = [
+            'receipt' => 'order_' . uniqid(),
+            'amount' => $request->amount, // amount in paise
+            'currency' => 'INR',
+            'notes' => [
+                'plan_id' => $request->plan_id,
+                'plan_name' => $request->plan_name
+            ]
+        ];
+
+        $order = $api->order->create($orderData);
+
+        return response()->json([
+            'order_id' => $order->id,
+            'amount' => $order->amount
+        ]);
+    }
 }

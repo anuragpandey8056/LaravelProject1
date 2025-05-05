@@ -303,7 +303,7 @@
     
     <ul class="nav-links" id="navLinks">
   
-      <li><a href="{{route('/')}}">Home</a></li>
+      <li><a href="{{route('/index')}}">Home</a></li>
       <li><a href="{{ route('contact')  }}">Contact</a></li>
       <li><a href="{{ url('shop')  }}">Shop</a></li>
       <li><a href="{{ route('contact2')}} ">contact</a></li>

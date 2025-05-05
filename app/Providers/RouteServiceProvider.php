@@ -17,10 +17,9 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    // public const HOME = '/tanent';
-    public const HOME = '/';
+    public const HOME = '/subscription';
+    public const HOME2 = '/';
 
-    public const HOME2 = '/user';
 
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
@@ -30,18 +29,22 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
-
-        $this->routes(function () {
+        $centralDomains = $this->centralDomains();
+        $this->routes(function () use($centralDomains) {
+            foreach($centralDomains as $domain){
             Route::middleware('api')
                 ->prefix('api')
+                ->domain($domain)
                 ->group(base_path('routes/api.php'));
 
             Route::middleware('web')
+                ->domain($domain)
                 ->group(base_path('routes/web.php'));
-        });
-    }
-    protected function centralDomains():array
-    {
-        return config('tenancy.central_domains');
-    }
+            }
+            });
+        }
+        protected function centralDomains():array
+        {
+            return config('tenancy.central_domains');
+        }
 }
