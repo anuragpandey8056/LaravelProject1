@@ -46,18 +46,32 @@ class admincontroller extends Controller
     public function adminBlog(Request $request)
     {
         $blogs = Blog::all();
-        $post = null;
-        $edit = false;
-
-        if ($request->has('edit') && $request->has('id')) {
-            $post = Blog::find($request->id);
-            $edit = true;
+        $edit = $request->has('edit');
+        $data = [
+            'blogs' => $blogs,
+            'edit' => $edit
+        ];
+        
+        if ($edit) {
+            $post = Blog::findOrFail($request->id);
+            $data['post'] = $post;
         }
-
-        return view('adminviews.adminblog', compact('blogs', 'post', 'edit'));
+        
+        return view('adminviews.adminblog', $data);
+    }
+    
+    public function editBlog($id)
+    {
+        $post = Blog::findOrFail($id);
+        $blogs = Blog::all();
+        
+        return view('adminviews.adminblog', [
+            'post' => $post,
+            'blogs' => $blogs,
+            'edit' => true
+        ]);
     }
 
-    // Store a new blog
     public function storeBlog(Request $request)
     {
         $request->validate([
@@ -65,68 +79,81 @@ class admincontroller extends Controller
             'content' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-        Log::error("Product not found with ");
-
-        $imagePath = null;
+    
+        $save_url = null;
+        
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('Upload/About', 'public');
+            $manager = new ImageManager(new Driver());
+            $image = $request->file('image');
+            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+    
+            // Resize and save image
+            $img = $manager->read($image);
+            $img->resize(800, 400);
+            $img->save(public_path('Upload/post/' . $imageName));
+    
+            $save_url = 'Upload/post/' . $imageName;
         }
-
+    
         Blog::create([
             'title' => $request->title,
             'content' => $request->content,
-            'image' => $imagePath,
+            'image' => $save_url,
         ]);
-        return redirect()->route('adminblog')->with('success', 'Blog created successfully.');
+    
+        return redirect('/addblog')->with('success', 'Blog created successfully.');
     }
-
-    // Update an existing blog
-    public function updateBlog(Request $request, Blog $blog)
+    
+    public function updateBlog(Request $request, $id)
     {
+        $blog = Blog::findOrFail($id);
+        
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $imagePath = $blog->image;
+        $data = [
+            'title' => $request->title,
+            'content' => $request->content,
+        ];
+
         if ($request->hasFile('image')) {
-            if ($blog->image) {
-                Storage::disk('public')->delete($blog->image);
+            // Delete old image if exists
+            if ($blog->image && file_exists(public_path($blog->image))) {
+                unlink(public_path($blog->image));
             }
-            $imagePath = $request->file('image')->store('Upload/About', 'public');
+            
+            $manager = new ImageManager(new Driver());
+            $image = $request->file('image');
+            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+            
+            // Resize and save image
+            $img = $manager->read($image);
+            $img->resize(800, 400);
+            $img->save(public_path('Upload/post/' . $imageName));
+            
+            $data['image'] = 'Upload/post/' . $imageName;
         }
 
-        $blog->update([
-            'title' => $request->title,
-            'description' => $request->content,
-            'image' => $imagePath,
-        ]);
+        $blog->update($data);
 
-        return redirect()->route('adminblog')->with('success', 'Blog updated successfully.');
+        return redirect('/addblog')->with('success', 'Blog updated successfully.');
     }
 
-    // Delete a blog post
-    // public function destroyBlog($id)
-    // {
-    //     $blog = Blog::findOrFail($id);
-    
-    //     if ($blog->image) {
-    //         Storage::disk('public')->delete($blog->image);
-    //     }
-    //     $blog->delete();
-    
-    //     return redirect()->route('adminblog')->with('success', 'Blog deleted successfully.');
-    // }
-
-    public function destroyBlog($id) {
+    public function destroyBlog($id) 
+    {
         $post = Blog::findOrFail($id);
-        if ($post->image) {
-            Storage::delete('public/' . $post->image);
+        
+        if ($post->image && file_exists(public_path($post->image))) {
+            unlink(public_path($post->image));
         }
+        
         $post->delete();
-        return redirect('/adminviews.adminblog');
-        }
+        
+        return redirect('/addblog')->with('success', 'Blog deleted successfully.');
+    }
     
 
 

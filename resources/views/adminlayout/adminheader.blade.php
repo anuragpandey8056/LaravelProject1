@@ -27,7 +27,7 @@
        
 
    
-        <a class="nav-link text-white sidebar-link" href="">
+        <a class="nav-link text-white sidebar-link" href="{{url('/dashboard')}}">
             <i class="fas fa-house me-2"></i> Dashboard
         </a>
         <a class="nav-link text-white sidebar-link" href="{{ url('/viewproduct') }}">
@@ -39,12 +39,12 @@
         <a class="nav-link text-white sidebar-link" href="{{ url('/addblog') }}">
             <i class="fas fa-magnifying-glass me-2"></i> Admin Blog
         </a>
+        
         <a class="nav-link text-white sidebar-link" href="{{ url('/updateproducts') }}">
             <i class="fas fa-file-pen me-2"></i> Update Products
         </a>
         
-        @auth
-    @if(Auth::user()->hasRole('super-admin'))
+    
         <a class="nav-link text-white sidebar-link" href="{{ url('/roles') }}">
             <i class="fas fa-briefcase me-2"></i> Roles
         </a>
@@ -57,11 +57,10 @@
         <a class="nav-link text-white sidebar-link" href="{{url('tanent/create')}}">
             <i class="fas fa-file-pen me-2"></i> Tanent
         </a>
-    @endif
-     @endauth
+  
 
         <!-- Log Out as full clickable nav-link -->
-        <form method="POST" action="{{ route('logout') }}">
+        <form method="POST" action="{{ url('tenantlogout') }}">
             @csrf
             <button type="submit" class="nav-link text-white sidebar-link w-100 text-start btn-logout">
                 <i class="fas fa-right-from-bracket me-2"></i> Log Out
@@ -87,7 +86,7 @@
             <a class="nav-link text-white sidebar-link" href="{{ url('/addproducts') }}"><i class="fas fa-briefcase me-2"></i> Upload Products</a>
             <a class="nav-link text-white sidebar-link" href="{{ url('/searchproducts') }}"><i class="fas fa-magnifying-glass me-2"></i> Search Products</a>
             <a class="nav-link text-white sidebar-link" href="{{ url('/updateproducts') }}"><i class="fas fa-file-pen me-2"></i> Update Products</a>
-            <a class="nav-link text-white sidebar-link" href="{{ url('/login') }}"><i class="fas fa-right-from-bracket me-2"></i> Logout</a>
+            <a class="nav-link text-white sidebar-link" href="{{ url('/tenantlogout') }}"><i class="fas fa-right-from-bracket me-2"></i> Logout</a>
         </nav>
     </div>
 </div>

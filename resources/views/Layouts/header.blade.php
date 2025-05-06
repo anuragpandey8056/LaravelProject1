@@ -304,23 +304,21 @@
     <ul class="nav-links" id="navLinks">
   
       <li><a href="{{route('/index')}}">Home</a></li>
-      <li><a href="{{ route('contact')  }}">Contact</a></li>
+      <li><a href="{{ url('contact')  }}">Contact</a></li>
       <li><a href="{{ url('shop')  }}">Shop</a></li>
-      <li><a href="{{ route('contact2')}} ">contact</a></li>
+      <li><a href="{{ url('contact2')}} ">contact</a></li>
       <li><a href="{{ url('/about')  }}">About Us</a></li>
-     
+      
   
-        @auth
-        @if((auth()->user()->hasRole('super-admin'))||(auth()->user()->hasRole('Admin')))  
-  
-                    <x-nav-link   class="nav-link" :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+      @auth
+                @if(Auth::user()->type!='user')
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="url('dashboard')" :active="request()->is('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-
-                 
-                
+                </div>
                 @endif
-        @endauth
+      @endauth
 
     </ul>
     
@@ -339,7 +337,7 @@
       <div class="auth-buttons">
     @auth
         <span class="user-name">{{ Auth::user()->name }}</span>
-        <form method="POST" action="{{ route('logout') }}" style="display: inline;" id="logout-form">
+        <form method="POST" action="{{ url('tenantlogout') }}" style="display: inline;" id="logout-form">
             @csrf
             <button type="submit"
                 class="text-sm text-gray-700 bg-white hover:bg-gray-100 border border-gray-300 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg px-5 py-2.5"
@@ -349,10 +347,10 @@
             </button>
         </form>
     @else
-        <a href="{{ route('login') }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2">
+        <a href="{{ url('tenantlogin') }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2">
             Log in
         </a>
-        <a href="{{ route('register') }}" class="text-gray-900 bg-white border border-gray-300 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5">
+        <a href="{{ url('tenantregister') }}" class="text-gray-900 bg-white border border-gray-300 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5">
             Register
         </a>
     @endauth

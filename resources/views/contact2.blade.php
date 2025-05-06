@@ -4,7 +4,6 @@
 <head>
     <title>Product List</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -47,7 +46,6 @@
                     <th>price</th>
                     <th>category</th>
                     <th>Image</th>
-
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -58,18 +56,19 @@
                     <td>{{ $product->name }}</td>
                     <td>{{ $product->price }}</td>
                     <td>{{ $product->category->categoryname}}</td>
-
+                  
+                     
                     <td>
+                       
                         @if($product->image)
-                        <img src="{{ asset($product->image) }}" style="width: 120px; height: 60px; cursor:pointer;"
-                            class="product-img" alt="Image">
+                        <img src="/Upload/products/{{ basename($product->image) }}" style="width: 120px; height: 60px; cursor:pointer;"
+                         class="product-img" alt="Image">
                         @else
-                        No Image
+                      
                         @endif
                     </td>
                     <td>
-                        <button class="btn btn-warning btn-sm editProductBtn" data-id="{{ $product->id }}"
-                            data-bs-toggle="modal" data-bs-target="#editProductModal">
+                        <button class="btn btn-warning btn-sm editProductBtn" data-id="{{ $product->id }}">
                             Edit
                         </button>
 
@@ -80,7 +79,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="text-center">No products found</td>
+                    <td colspan="6" class="text-center">No products found</td>
                 </tr>
                 @endforelse
             </tbody>
@@ -105,21 +104,19 @@
                     <div class="form-group mb-3">
                         <label>price:</label>
                         <input type="text" name="price" class="form-control" required />
-
-                        <span class="text-danger error-text description_error"></span>
+                        <span class="text-danger error-text price_error"></span>
                     </div>
                     <div class="form-group mb-3">
-                    <label >Choose a category</label>
-
+                    <label>Choose a category</label>
                         <select name="category" class="form-control" required>
                         <option value="">------select a category ---</option>
-
                         <option value="1">Fashion</option>
                         <option value="2">Electronics</option>
                         <option value="3">beauty</option>
                         <option value="4">grocery</option>
                         <option value="5">stationary</option>
                         </select>
+                        <span class="text-danger error-text category_error"></span>
                     </div>
                     <div class="form-group mb-3">
                         <label>Image:</label>
@@ -153,38 +150,31 @@
                     <div class="form-group mb-3">
                         <label>price:</label>
                         <input type="text" name="price" id="editProductPrice" class="form-control" required />
-                        <span class="text-danger error-text description_error"></span>
+                        <span class="text-danger error-text price_error"></span>
                     </div>
-
-
                     <div class="form-group mb-3">
-                    <label >Choose a category</label>
-
+                    <label>Choose a category</label>
                         <select id="editcategory" name="category" class="form-control" required>
                         <option value="">------select a category ---</option>
-
                         <option value="1">Fashion</option>
                         <option value="2">Electronics</option>
                         <option value="3">beauty</option>
                         <option value="4">grocery</option>
                         <option value="5">stationary</option>
-
                         </select>
+                        <span class="text-danger error-text category_error"></span>
                     </div>
                     <div class="form-group mb-3">
                         <label>Image:</label>
-
                         <!-- Image preview -->
                         <div id="image-preview" class="mb-2">
                             <img id="edit-preview-image" src="" alt="Current Image"
                                 style="max-width: 200px; height: auto; display: none;" />
                         </div>
-
                         <!-- File input -->
                         <input type="file" name="image" class="form-control" accept="image/*" />
                         <span class="text-danger error-text image_error"></span>
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success">Update Product</button>
@@ -192,7 +182,6 @@
             </form>
         </div>
     </div>
-
 
     <!-- Bootstrap Image Preview Modal -->
     <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewLabel" aria-hidden="true">
@@ -210,13 +199,11 @@
         </div>
     </div>
 
-
     <!-- Bootstrap & jQuery -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 
     <script>
         // Show image in modal
@@ -226,8 +213,6 @@
              $('#imagePreviewModal').modal('show');
         });
 
-
-
         // Add Product AJAX
         $('#productForm').submit(function(e) {
             e.preventDefault();
@@ -236,7 +221,7 @@
             $('.error-text').text('');
     
             $.ajax({
-                url: "{{ route('product.store') }}",
+                url: "/products/save-item",
                 type: "POST",
                 data: formData,
                 contentType: false,
@@ -251,12 +236,13 @@
                         <td>${response.product.name}</td>
                         <td>${response.product.price}</td>
                         <td>${response.product.category}</td>
-
                         <td><img src="${response.product.image}" class="product-img" alt="Image"></td>
-                        <td><button class="btn btn-warning btn-sm editProductBtn" data-id="${response.product.id}">Edit</button>
-                        <button class="btn btn-danger btn-sm deleteProductBtn" data-id="${response.product.id}">Delete</button></td>
+
+                        <td>
+                            <button class="btn btn-warning btn-sm editProductBtn" data-id="${response.product.id}">Edit</button>
+                            <button class="btn btn-danger btn-sm deleteProductBtn" data-id="${response.product.id}">Delete</button>
+                        </td>
                     </tr>`;
-                    // $('#productTable').append(newRow);
                     $('#productTable').prepend(newRow);
                 },
                 error: function(xhr) {
@@ -273,43 +259,36 @@
         });
     
         // Edit Product AJAX - Load Product Data into Modal
-
-
-
-$(document).on('click', '.editProductBtn', function () {
-    let productId = $(this).data('id');
-
-    
-    $.ajax({
-        url: `/products/${productId}/edit`,
-        success: function (response) {
-            console.log(response.product.cateory_id);
-            // console.log(response.product.id);
-            // Fill input fields
-            $('#editProductId').val(response.product.id);
-            $('#editProductName').val(response.product.name); 
-            $('#editProductPrice').val(response.product.price); 
-            $('#editcategory').val(response.product.cateory_id); 
+        $(document).on('click', '.editProductBtn', function () {
+            let productId = $(this).data('id');
             
+            $.ajax({
+                url: `/products/${productId}/edit`,
+                type: 'GET',
+                success: function (response) {
+                    // Fill input fields
+                    $('#editProductId').val(response.product.id);
+                    $('#editProductName').val(response.product.name); 
+                    $('#editProductPrice').val(response.product.price); 
+                    $('#editcategory').val(response.product.cateory_id); 
+                    
+                    if (response.product.image) {
+                        let imageUrl = response.product.image; 
+                        console.log(imageUrl);
+                        $('#edit-preview-image').attr('src', imageUrl).show();
+                    } else {
+                        $('#edit-preview-image').hide();
+                    }
 
-
-           
-            if (response.product.image) {
-                let imageUrl = `${response.product.image}`; 
-                $('#edit-preview-image').attr('src', imageUrl).show();
-            } else {
-                $('#edit-preview-image').hide();
-            }
-
-            // Show modal
-            $('#editProductModal').modal('show');
-        },
-        error: function (xhr) {
-            console.error("Failed to load product:", xhr);
-        }
-    });
-});
-
+                    // Show modal
+                    $('#editProductModal').modal('show');
+                },
+                error: function (xhr) {
+                    console.error("Failed to load product:", xhr);
+                    Swal.fire('Error!', 'Failed to load product details.', 'error');
+                }
+            });
+        });
     
         // Update Product AJAX
         $('#editProductForm').submit(function(e) {
@@ -328,11 +307,21 @@ $(document).on('click', '.editProductBtn', function () {
                     $('#message').html(`<div class="alert alert-success">${response.success}</div>`);
                     $('#editProductForm')[0].reset();
                     $('#editProductModal').modal('hide');
+                    
+                    // Update the row with new values
                     $(`#product_${response.product.id} td:nth-child(2)`).text(response.product.name);
                     $(`#product_${response.product.id} td:nth-child(3)`).text(response.product.price);
-                    $(`#product_${response.product.id} td:nth-child(3)`).text(response.product.cateory_id);
-
-                    $(`#product_${response.product.id} td:nth-child(4) img`).attr('src', response.product.image);
+                    $(`#product_${response.product.id} td:nth-child(4)`).text(response.product.category);
+                    
+                    // Update image
+                    if (response.product.image) {
+                        const imgCell = $(`#product_${response.product.id} td:nth-child(5)`);
+                        if (imgCell.find('img').length) {
+                            imgCell.find('img').attr('src', response.product.image);
+                        } else {
+                            imgCell.html(`<img src="${response.product.image}" class="product-img" alt="Image">`);
+                        }
+                    }
                 },
                 error: function(xhr) {
                     if (xhr.status === 422) {
@@ -347,9 +336,6 @@ $(document).on('click', '.editProductBtn', function () {
             });
         });
     
-
-
-
         // Delete Product AJAX with Event Delegation
         $(document).on('click', '.deleteProductBtn', function(e) {
             e.preventDefault();
@@ -366,7 +352,7 @@ $(document).on('click', '.editProductBtn', function () {
                 confirmButtonText: 'Yes, delete it!',
             }).then(result => {
                 if (result.isConfirmed) {
-                    axios.delete(`products/delete/${productId}`, {
+                    axios.delete(`/products/delete/${productId}`, {
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                         }
@@ -383,8 +369,5 @@ $(document).on('click', '.editProductBtn', function () {
             });
         });
     </script>
-
-
 </body>
-
 </html>

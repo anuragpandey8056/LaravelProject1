@@ -98,7 +98,7 @@
     <h3>{{ isset($edit) && $edit === true ? 'Edit Post' : 'Add New Post' }}</h3>
 
     <form method="POST" 
-          action="{{ isset($edit) && $edit ? route('blogs.update', $post->id) : route('blogs.store') }}" 
+          action="{{ isset($edit) && $edit ? url('/blogs/'.$post->id) : url('/blogs') }}" 
           enctype="multipart/form-data">
         @csrf
         @if(isset($edit) && $edit)
@@ -113,7 +113,7 @@
         <input type="file" name="image">
         @if(isset($post) && $post->image)
             <div style="margin-top: 10px;">
-                <img src="{{ asset('storage/' . $post->image) }}" width="100">
+                <img src="{{ asset($post->image) }}" width="100">
             </div>
         @endif
 
@@ -135,22 +135,19 @@
         <tbody>
             @foreach ($blogs as $item)
                 <tr>
-                <td>{!! $item->title !!}</td>
-
+                    <td>{!! $item->title !!}</td>
                     <td>{!! Str::limit($item->content, 100) !!}</td>
-
                     <td>
                         @if($item->image)
-                            <img src="{{ asset('storage/' . $item->image) }}" width="60">
+                            <img src="{{ asset($item->image) }}" width="60" class="product-img" alt="Blog image">
                         @else
                             N/A
                         @endif
                     </td>
                     <td class="action-buttons">
-                        <a href="{{ route('adminblog', ['edit' => true, 'id' => $item->id]) }}">Edit</a>
-
-                        <a href="/destory/{{ $item->id }}/delete" class="btn btn-danger btn-sm" onclick="return confirm('Delete this post?')">
-                                <i class="fas fa-trash-alt me-1"></i>Delete
+                        <a href="{{ url('/addblog', [ 'id' => $item->id]) }}">Edit</a>
+                        <a href="{{ url('/blogs/'.$item->id.'/delete') }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this post?')">
+                            <i class="fas fa-trash-alt me-1"></i>Delete
                         </a>
                     </td>
                 </tr>

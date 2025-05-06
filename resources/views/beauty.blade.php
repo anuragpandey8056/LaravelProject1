@@ -23,7 +23,7 @@ $x = "beauty";
               <p class="card-text">{{ $product->description ?? 'No description available.' }}</p>
             </div>
             <div class="card-footer bg-transparent border-0">
-            <a href="{{route('addcart',['id'=>$product->id])}}" class="btn btn-black w-100">Add to Cart</a>
+            <a href="url('add-to-cart',['id'=>$product->id])}}" class="btn btn-black w-100">Add to Cart</a>
 
 
             </div>

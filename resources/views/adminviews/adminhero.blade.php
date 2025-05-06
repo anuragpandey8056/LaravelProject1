@@ -85,7 +85,8 @@
                             <td class="px-4">{{$hero->description }}</td>
                             <td class="px-4">
                                 @if($hero->url)
-                                <img src="{{ asset($hero->url) }}" 
+                               
+                                <img src="/Upload/Banner/{{ basename($hero->url) }}"
                                      style="width: 120px; height: 70px; object-fit: cover; border-radius: 0.75rem; cursor: pointer; border: 1px solid #eee"
                                      class="product-img shadow-sm"
                                      alt="Image">
@@ -197,19 +198,20 @@
 </div>
 
 <!-- Bootstrap Image Preview Modal -->
-<div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewLabel" aria-hidden="true" style="z-index: 1055 !important;">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content bg-white border-0 shadow">
-            <div class="modal-header border-0">
-                <h5 class="modal-title" id="imagePreviewLabel">Image Preview</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-center p-0">
-                <img id="previewImage" src="" alt="Preview" class="img-fluid rounded">
+<div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-white" id="imagePreviewLabel">Image Preview</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="previewImage" src="" alt="Preview" class="img-fluid rounded">
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
     <!-- Bootstrap & jQuery -->
@@ -271,7 +273,7 @@
         $('.error-text').text('');
 
         $.ajax({
-            url: "{{ route('hero.store') }}",
+            url: 'herosaveitem',
             type: "POST",
             data: formData,
             contentType: false,
@@ -315,18 +317,16 @@
         let heroId = $(this).data('id');
 
         $.ajax({
-            url: `/hero/${heroId}/edit`,  // <-- Use backticks here
+            url: `${heroId}/edit`,  // <-- Use backticks here
             type: 'GET',
             success: function(response) {
                 $('#editheroId').val(response.hero.id);
                 $('#editheroDescription').val(response.hero.description);
                 $('#editstatus').val(response.hero.status);
                 if (response.hero.image) {
-                    $('#edit-preview-image').attr('src', response.hero.image).show();
-                } else {
-                    $('#edit-preview-image').hide();
-                }
-                $('#editheroModal').modal('show');
+                let imagePath = `/Upload/Banner/${response.hero.image.split('/').pop()}`;
+                row.find('td:nth-child(3) img').attr('src', imagePath);
+}
             }
         });
     });
@@ -338,7 +338,7 @@
         let formData = new FormData(this);
 
         $.ajax({
-            url: `/hero/${heroId}/update`, // <-- Use backticks here
+            url: `/${heroId}/update`, // <-- Use backticks here
             type: 'POST',
             data: formData,
             contentType: false,
@@ -370,7 +370,7 @@
         const heroId = $(this).data('id');
         const newStatus = $(this).is(':checked') ? 1 : 0;
 
-        axios.post(`/hero/toggle-status/${heroId}`, {  // <-- Use backticks here
+        axios.post(`toggle-status/${heroId}`, {  // <-- Use backticks here
             status: newStatus
         }, {
             headers: {
@@ -404,7 +404,7 @@
             confirmButtonText: 'Yes, delete it!',
         }).then(result => {
             if (result.isConfirmed) {
-                axios.delete(`/hero/delete/${heroId}`, {  // <-- Use backticks here
+                axios.delete(`delete/${heroId}`, {  // <-- Use backticks here
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     }

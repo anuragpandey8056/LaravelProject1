@@ -121,12 +121,12 @@ Route::get('/filter-products', [shopcontroller::class, 'filterProducts'])->name(
 
 
 // //ajax crud
-Route::prefix('products')->group(function(){
-    Route::post('/save-item', [usercontroller::class, 'store'])->name('product.store');
-    Route::get('/{id}/edit', [usercontroller::class, 'edit'])->name('product.edit');
-    Route::post('/{id}/update', [usercontroller::class, 'update'])->name('product.update');
-    Route::delete('/delete/{id}', [usercontroller::class, 'delete'])->name('product.delete');
-});
+// Route::prefix('products')->group(function(){
+//     Route::post('/save-item', [usercontroller::class, 'store'])->name('product.store');
+//     Route::get('/{id}/edit', [usercontroller::class, 'edit'])->name('product.edit');
+//     Route::post('/{id}/update', [usercontroller::class, 'update'])->name('product.update');
+//     Route::delete('/delete/{id}', [usercontroller::class, 'delete'])->name('product.delete');
+// });
 
 
 //admin_dashboard
@@ -137,12 +137,6 @@ Route::middleware(['auth', 'verified', 'PreventBackHistory'])->group(function ()
     Route::get('/viewproduct', [admincontroller::class, 'adminviewproduct'])->name('viewproduct');
     Route::get('/addhero', [admincontroller::class, 'addadminhero']);
 
-
-    Route::get('/addblog', [AdminController::class, 'adminBlog'])->name('adminblog');
-    Route::post('/blogs', [AdminController::class, 'storeBlog'])->name('blogs.store');
-    Route::put('/blogs/{blog}', [AdminController::class, 'updateBlog'])->name('blogs.update');
-    Route::delete('/blogs/{id}', [AdminController::class, 'destroyBlog'])->name('blogs.destroy');
-    Route::get('/destory/{id}/delete', [AdminController::class, 'destroyBlog']);
     
 
 
@@ -180,6 +174,14 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('tanent',TenantController::class)->middleware(['auth', 'verified']);
 Route::post('tanent/store',[TenantController::class,'store'])->name('tenant.store');
+
+
+
+
+
+Route::get('/subscriptiondashboard', [SubscriptionController::class, 'subscriptiondashboard']);
+Route::get('/subscriptiondashboardplan', [SubscriptionController::class, 'subscriptiondashboardplan']);
+
 
 require __DIR__.'/auth.php';
 

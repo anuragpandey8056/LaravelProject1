@@ -48,21 +48,19 @@
 </style>
 </head>
 
-<!-- <img src="{{asset($activeHeroes->url)}}" width="100%" height="600px" alt="">                   
-<p>{{ $activeHeroes->description }}</p> -->
 
 
 <!-- Hero Section -->
-<section class="bg-image" style="background-image: url('{{ asset($activeHeroes->url)}}'); height: 100vh;">
+<section class="bg-image">
+<img id='heroImg'src="/Upload/Banner/{{basename($activeHeroes->url) }}" width="100%" alt="">
+
   <div class="mask" style="background-color: rgba(0, 0, 0, 0.6); height: 100%;">
     <div class="d-flex justify-content-center align-items-center h-100">
       <div style="width: 90%; margin: 0 auto;">
         <div class="text-white text-center px-4">
           <h1 class="mb-4 display-4 fw-bold">Welcome to Our World</h1>
-         <marquee> <p class="lead mb-4">
-            {{$activeHeroes->description}}
-          </p>
-</marquee>
+        
+<marquee>   <h1  id='heroText'>{{$activeHeroes->description}}</h1></marquee>
           <a class="btn btn-outline-light btn-lg" href="#learn-more" role="button">Learn More</a>
         </div>
       </div>
