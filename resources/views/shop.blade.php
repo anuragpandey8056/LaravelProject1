@@ -136,7 +136,7 @@
                 $('#loading').show();
                 
                 $.ajax({
-                    url: "{{ route('filter.products') }}",
+                    url: '/filter-products'
                     type: "GET",
                     data: {
                         category_id: categoryId

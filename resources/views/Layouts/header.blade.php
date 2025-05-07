@@ -390,7 +390,7 @@
 
 
        
-        <a href="{{ route('cart') }}"><i class="fas fa-shopping-cart"></i></a>
+        <a href="{{ url('cart') }}"><i class="fas fa-shopping-cart"></i></a>
 
 
         <a href="#"><i class="fab fa-linkedin"></i></a>

@@ -73,7 +73,7 @@ public function updateCart(Request $request, $id)
         session()->put('cart', $cart);
     }
     
-    return redirect()->route('cart')->with('success', 'Cart updated successfully!');
+    return redirect()->back()->with('success', 'Cart updated successfully!');
 }
 
 public function removeCart($id)
@@ -84,7 +84,7 @@ public function removeCart($id)
         session()->put('cart', $cart);
     }
     
-    return redirect()->route('cart')->with('success', 'Product removed from cart!');
+    return redirect()->back()->with('success', 'Product removed from cart!');
 }
     
 }

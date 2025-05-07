@@ -9,6 +9,7 @@ use App\Http\Controllers\Rolecontroller;
 use App\Http\Controllers\shopcontroller;
 use App\Http\Controllers\usercontroller;
 use App\Http\Controllers\admincontroller;
+use App\Http\Controllers\stripecontroller;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\razorpaycontroller;
 use App\Http\Controllers\userasignController;
@@ -51,13 +52,19 @@ Route::get('electronics1',[usercontroller::class,'electronics']);
 Route::get('beauty1',[usercontroller::class,'beauty']);
 Route::get('grocery1',[usercontroller::class,'grocery']);
 Route::get('Stationary1',[usercontroller::class,'Stationary']);
+Route::get('/add-to-cart/{id}', [ShopController::class, 'addToCart']);
 
-Route::get('/add-to-cart/{id}', [shopcontroller::class, 'addToCart']);
-Route::get('/cart', [shopcontroller::class, 'viewCart'])->name('cart');
+// Route for viewing cart
+Route::get('/cart', [shopcontroller::class, 'viewCart']);
 
 
-Route::post('/update-cart/{id}', [shopcontroller::class, 'updateCart'])->name('update.cart');
-Route::get('/remove-cart/{id}', [shopcontroller::class, 'removeCart'])->name('remove.cart');
+Route::post('/update-cart/{id}', [shopcontroller::class, 'updateCart']);
+Route::get('/remove-cart/{id}', [shopcontroller::class, 'removeCart']);
+
+
+
+
+
 //    Route::get('login',function(){
 //     return view('app.auth.login');
 //    });
@@ -73,14 +80,18 @@ Route::get('/shop', [shopcontroller::class, 'index'])->name('shop');
 
 
 Route::get('/shop',[shopcontroller::class,'shop']);
+
 Route::get('/filter-products', [shopcontroller::class, 'filterProducts'])->name('filter.products');
 
 
 // Razorpay Payment Routes
-Route::post('/razorpay-payment', [razorpaycontroller::class, 'payment'])->name('razorpay.payment');
+// Route::post('/razorpay-payment', [razorpaycontroller::class, 'payment']);
 
-Route::get('/order-success/{id}', [razorpaycontroller::class, 'orderSuccess'])->name('order.success');
 
+//stripe
+Route::get('/order-success', [stripecontroller::class, 'success']);
+Route::get('/stripe/cancel', [stripecontroller::class, 'cancel']);
+Route::post('/stripe/checkout', [stripecontroller::class, 'createCheckoutSession']);
 
 
 
